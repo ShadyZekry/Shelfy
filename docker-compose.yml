@@ -77,6 +77,24 @@ services:
             - '${PUSHER_METRICS_PORT:-9601}:9601'
         networks:
             - sail
+    phpmyadmin:
+        image: 'phpmyadmin:latest'
+        ports:
+            - 8080:80
+        environment:
+            MYSQL_USERNAME: "${DB_USERNAME}"
+            MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+            PMA_HOST: mysql
+            PMA_USER: root
+            PMA_PASSWORD: password
+        links:
+            - "mysql:db"
+        depends_on:
+            - mysql
+        networks:
+            - sail
+        volumes:
+            - phpmyadmin:/var/www/html/themes
 networks:
     sail:
         driver: bridge
@@ -84,4 +102,6 @@ volumes:
     sail-mysql:
         driver: local
     sail-redis:
+        driver: local
+    phpmyadmin:
         driver: local
